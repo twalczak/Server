@@ -4,6 +4,7 @@
 #include <iostream>
 #include <pthread.h>
 #include <unistd.h>
+#include "network.h"
 
 using namespace std;
 
@@ -42,6 +43,8 @@ void *n2(void *arg)
 
 int main(void)
 {
+    Network botLink;
+    botLink.outp();
     Test testClass;
     testClass.outp();
     pthread_t networkThread, t2;
