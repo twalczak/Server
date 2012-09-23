@@ -1,3 +1,6 @@
+//-------------------
+// MAIN.C iRobot
+
 #include <iostream>
 #include <pthread.h>
 #include <unistd.h>
