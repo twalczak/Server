@@ -18,23 +18,26 @@
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <getopt.h>
+#include <string>
 
 class Serial_Controller {
 public:
     int fd;
     char serialport[256];
-    int baudrate; //iRobot Default
+    int baudrate;
     char buf[256];
+    bool _open;
     int rc,n;
+    std::string error_msg;
     
-    void Serial(char* port, int baud);
-    
-    char open();
+    Serial_Controller(char* port, int baud);
     char isOpen();
-    
     char write_byte(uint8_t data);
-    char write_string(char* str);
+    char write_string(const char* str);
     uint8_t read_byte();
+    uint8_t get_error();
+private:
+    int serial_init();
 };
 
 #endif /* defined(____serial__) */
