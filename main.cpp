@@ -1,56 +1,33 @@
-//-------------------
-// MAIN.C iRobot
+/*-------------------------------------
+       Name:    Tomasz Walczak
+       Date:    Sept. 15, 2012
+ 
+       File:    main.c
+       Desc:    Main Function
+    Project:    iRobot Server
+--------------------------------------*/
 
 #include <iostream>
-#include <pthread.h>
-#include <unistd.h>
-#include "network.h"
+#include <pthread.h>        //POSIX Threads Library
+
+#include "network.h"        //TCP-IP Netowrk Class
+#include "serial.h"         //UART Serial Class
+#include "workerThread.h"   
 
 using namespace std;
 
-class Test {
-public:
-    void outp();
-};
-
-void Test::outp() {
-    cout << "outp Test\n";
-}
-
-
-bool run = true;
-int nShared = 2;
-
-void *network(void *arg)
+int main(int argc, char *argv[])
 {
-    while(run)
+    if(argc != 2)
     {
-        cout << "From the thread" << nShared << "\n";
-        usleep(2*1000000);
-        nShared++;
+        cout << "Argument Error\nExiting...\n";
+        exit(0);
     }
-}
 
-void *n2(void *arg)
-{
-    for(;;)
-    {
-        cout << "From thread [two]" << nShared << "\n";
-        nShared--;
-        usleep(2*300000);
-    }
-}
-
-int main(void)
-{
-    Network botLink;
-    botLink.outp();
-    Test testClass;
-    testClass.outp();
-    pthread_t networkThread, t2;
-    cout << " - Robot Control: v1.0.0\n\n";
-    pthread_create(&networkThread, NULL, network, (void *)NULL);
-    pthread_create(&t2, NULL, n2, (void *)NULL);
-    pthread_exit(NULL);
+    pthread_t networkThread;    // Start network worker thread
+    pthread_create(&networkThread,
+                   NULL, netWorker, (void *)NULL);
+    
+    pthread_exit(NULL);         // Wait for threads
     return 0;
 }
